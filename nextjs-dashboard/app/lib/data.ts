@@ -1,4 +1,4 @@
-import { sql } from '@vercel/postgres';
+import { sql } from '@vercel/postgres'
 import {
   CustomerField,
   CustomersTableType,
@@ -7,12 +7,15 @@ import {
   LatestInvoiceRaw,
   User,
   Revenue,
-} from './definitions';
-import { formatCurrency } from './utils';
+} from './definitions'
+import { formatCurrency } from './utils'
+import { unstable_noStore as noStore } from 'next/cache' //opting out of static rendering
+//TO REMEMBER: With dynamic rendering, your application is only as fast as your slowest data fetch
 
 export async function fetchRevenue() {
-  // Add noStore() here prevent the response from being cached.
+  // noStore() here to prevent the response from being cached.
   // This is equivalent to in fetch(..., {cache: 'no-store'}).
+  noStore()
 
   try {
     // Artificially delay a response for demo purposes.
@@ -33,6 +36,8 @@ export async function fetchRevenue() {
 }
 
 export async function fetchLatestInvoices() {
+  noStore()
+
   try {
     const data = await sql<LatestInvoiceRaw>`
       SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
@@ -53,6 +58,7 @@ export async function fetchLatestInvoices() {
 }
 
 export async function fetchCardData() {
+  noStore()
   try {
     // You can probably combine these into a single SQL query
     // However, we are intentionally splitting them to demonstrate
@@ -93,6 +99,7 @@ export async function fetchFilteredInvoices(
   query: string,
   currentPage: number,
 ) {
+  noStore()
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
@@ -125,6 +132,7 @@ export async function fetchFilteredInvoices(
 }
 
 export async function fetchInvoicesPages(query: string) {
+  noStore()
   try {
     const count = await sql`SELECT COUNT(*)
     FROM invoices
@@ -146,6 +154,7 @@ export async function fetchInvoicesPages(query: string) {
 }
 
 export async function fetchInvoiceById(id: string) {
+  noStore()
   try {
     const data = await sql<InvoiceForm>`
       SELECT
@@ -171,6 +180,7 @@ export async function fetchInvoiceById(id: string) {
 }
 
 export async function fetchCustomers() {
+  noStore()
   try {
     const data = await sql<CustomerField>`
       SELECT
@@ -189,6 +199,7 @@ export async function fetchCustomers() {
 }
 
 export async function fetchFilteredCustomers(query: string) {
+  noStore()
   try {
     const data = await sql<CustomersTableType>`
 		SELECT
@@ -222,6 +233,7 @@ export async function fetchFilteredCustomers(query: string) {
 }
 
 export async function getUser(email: string) {
+  noStore()
   try {
     const user = await sql`SELECT * FROM users WHERE email=${email}`;
     return user.rows[0] as User;
