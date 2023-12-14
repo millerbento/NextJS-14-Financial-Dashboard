@@ -48,3 +48,20 @@ Make sure you have the following installed on your machine:
 
 2. Open your browser and visit [http://localhost:3000](http://localhost:3000) to view the application.
 
+
+### Database (Vercel Postgres Database)
+
+1. Create a project on GitHub
+
+2. Go to https://vercel.com, connect your GitHub account and create a project based on your GitHub repository
+
+3. Create a Postgres database
+
+4. Go to Storage -> Select the database you created -> Go to "env.local" tab -> Show secret -> Copy Snippet -> Paste it in the .env file created in the root directory
+
+#### Creating database and seed it with initial data
+
+1. Make sure you have completed the previous steps
+
+2. Run "npm run seed" in the terminal. 
+You should see some console.log messages in your terminal to let you know the script is running.
